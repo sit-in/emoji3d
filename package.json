@@ -9,7 +9,8 @@
     "start": "next start",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "test:api": "node scripts/test-api.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -54,7 +55,7 @@
     "react": "^18",
     "react-day-picker": "9.8.0",
     "react-dom": "^18",
-    "react-dropzone": "latest",
+    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",

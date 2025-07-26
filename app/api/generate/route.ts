@@ -6,6 +6,8 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const image = formData.get("image") as File
+    const style = formData.get("style") as string || "Clay"
+    const prompt = formData.get("prompt") as string || "a cute 3D emoji character in island tropical style with vibrant colors"
 
     if (!image) {
       console.error("No image provided")
@@ -45,8 +47,8 @@ export async function POST(request: NextRequest) {
       version: "a07f252abbbd832009640b27f063ea52d87d7a23a185ca165bec23b5adc8deaf",
       input: {
         image: dataUrl,
-        style: "Clay",
-        prompt: "a cute 3D emoji character in island tropical style with vibrant colors",
+        style: style,
+        prompt: prompt,
         instant_id_strength: 0.8,
       },
     }
@@ -159,8 +161,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Return the first output image URL
-    const outputUrl = result.output && result.output.length > 0 ? result.output[0] : null
+    // Handle the output - it's an array of objects with url() method
+    let outputUrl = null
+    
+    if (result.output && result.output.length > 0) {
+      // The output is an array of file objects
+      // Access the URL directly if it's a string, or use the url property if it's an object
+      const firstOutput = result.output[0]
+      outputUrl = typeof firstOutput === 'string' ? firstOutput : firstOutput.url || firstOutput
+    }
 
     if (!outputUrl) {
       console.error("No output generated")

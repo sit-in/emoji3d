@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Upload, ImageIcon, Loader2, Download, AlertCircle, Info } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 interface GeneratedResult {
   url: string
@@ -23,6 +25,8 @@ export default function Uploader() {
   const [email, setEmail] = useState("")
   const [wechat, setWechat] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [selectedStyle, setSelectedStyle] = useState("Clay")
+  const [customPrompt, setCustomPrompt] = useState("")
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -51,6 +55,10 @@ export default function Uploader() {
       // Call the API with timeout
       const formData = new FormData()
       formData.append("image", file)
+      formData.append("style", selectedStyle)
+      if (customPrompt.trim()) {
+        formData.append("prompt", customPrompt.trim())
+      }
 
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 120000) // 2 minute timeout
@@ -143,10 +151,7 @@ export default function Uploader() {
         alert("信息已保存！我们会及时通知你产品更新")
         setShowLeadForm(false)
 
-        // For demo mode, just show success message
-        if (result?.demoMode) {
-          alert("演示模式：实际部署时会下载真实的 3D Emoji 图片")
-        } else if (result?.url) {
+        if (result?.url) {
           const link = document.createElement("a")
           link.href = result.url
           link.download = "3d-emoji-sticker.png"
@@ -172,14 +177,16 @@ export default function Uploader() {
           <p className="text-xl text-gray-600">上传一张照片，让 AI 为你创造独特的 3D 海岛风格贴纸</p>
         </div>
 
-        {/* Demo Mode Alert */}
-        <Alert className="mb-6 border-blue-200 bg-blue-50">
-          <Info className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800">
-            <strong>演示模式：</strong>当前运行在预览环境中。部署到生产环境后，将使用真实的 Replicate API 生成 3D
-            Emoji。
-          </AlertDescription>
-        </Alert>
+        {/* API Configuration Alert - Only show in demo mode */}
+        {process.env.NODE_ENV === 'development' && !process.env.REPLICATE_API_TOKEN && (
+          <Alert className="mb-6 border-blue-200 bg-blue-50">
+            <Info className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="text-blue-800">
+              <strong>提示：</strong>请在 .env.local 文件中配置 REPLICATE_API_TOKEN 以启用真实的 3D 生成功能。
+              查看 <code className="bg-blue-100 px-1 rounded">docs/API_SETUP.md</code> 了解详情。
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Error Alert */}
         {error && (
@@ -192,6 +199,47 @@ export default function Uploader() {
               </Button>
             </AlertDescription>
           </Alert>
+        )}
+
+        {/* Style Selection */}
+        {!isUploading && !result && (
+          <Card className="mb-6">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="style-select">选择 3D 风格</Label>
+                  <Select value={selectedStyle} onValueChange={setSelectedStyle}>
+                    <SelectTrigger id="style-select" className="w-full mt-2">
+                      <SelectValue placeholder="选择风格" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Clay">粘土风格 (Clay)</SelectItem>
+                      <SelectItem value="3D Cartoon">3D 卡通风格</SelectItem>
+                      <SelectItem value="Realistic">写实风格</SelectItem>
+                      <SelectItem value="Watercolor">水彩风格</SelectItem>
+                      <SelectItem value="Oil Painting">油画风格</SelectItem>
+                      <SelectItem value="Line Drawing">线条素描</SelectItem>
+                      <SelectItem value="Anime">动漫风格</SelectItem>
+                      <SelectItem value="Pixel Art">像素风格</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="custom-prompt">自定义描述（可选）</Label>
+                  <Input
+                    id="custom-prompt"
+                    type="text"
+                    placeholder="例如：可爱的海岛风格，明亮的色彩"
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">留空将使用默认的热带岛屿风格</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {!result ? (
@@ -257,15 +305,6 @@ export default function Uploader() {
           </Card>
         ) : (
           <div className="space-y-8">
-            {/* Demo Mode Result Alert */}
-            {result.demoMode && (
-              <Alert className="border-yellow-200 bg-yellow-50">
-                <Info className="h-4 w-4 text-yellow-600" />
-                <AlertDescription className="text-yellow-800">
-                  <strong>演示效果：</strong>这是模拟的生成结果。实际部署时会显示真实的 3D Emoji 效果。
-                </AlertDescription>
-              </Alert>
-            )}
 
             {/* Result Display */}
             <Card className="overflow-hidden shadow-2xl">
@@ -295,19 +334,17 @@ export default function Uploader() {
                       }}
                     />
                     <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm">
-                      {result.demoMode ? "演示效果" : "3D 效果"}
+                      3D 效果
                     </div>
                   </div>
                 </div>
 
                 <div className="p-8 text-center bg-gradient-to-r from-orange-50 to-pink-50">
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                    🎉 {result.demoMode ? "演示 3D Emoji 已生成！" : "你的专属 3D Emoji 已生成！"}
+                    🎉 你的专属 3D Emoji 已生成！
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    {result.demoMode
-                      ? "这是演示效果。实际部署后将生成真实的 3D 海岛风格 Emoji！"
-                      : "喜欢这个效果吗？保存到相册或分享给朋友吧！"}
+                    喜欢这个效果吗？保存到相册或分享给朋友吧！
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -317,7 +354,7 @@ export default function Uploader() {
                       className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8"
                     >
                       <Download className="w-5 h-5 mr-2" />
-                      {result.demoMode ? "体验保存功能" : "保存到相册"}
+                      保存到相册
                     </Button>
 
                     <Button
