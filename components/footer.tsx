@@ -26,21 +26,21 @@ export default function Footer() {
                 className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
                 aria-label="微信"
               >
-                <MessageCircle className="w-5 h-5" />
+                <span suppressHydrationWarning><MessageCircle className="w-5 h-5" /></span>
               </a>
               <a
                 href="#"
                 className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
                 aria-label="小红书"
               >
-                <Instagram className="w-5 h-5" />
+                <span suppressHydrationWarning><Instagram className="w-5 h-5" /></span>
               </a>
               <a
                 href="#"
                 className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
                 aria-label="Twitter"
               >
-                <Twitter className="w-5 h-5" />
+                <span suppressHydrationWarning><Twitter className="w-5 h-5" /></span>
               </a>
             </div>
             <div className="space-y-2 text-sm text-gray-400">

@@ -177,16 +177,6 @@ export default function Uploader() {
           <p className="text-xl text-gray-600">上传一张照片，让 AI 为你创造独特的 3D 海岛风格贴纸</p>
         </div>
 
-        {/* API Configuration Alert - Only show in demo mode */}
-        {process.env.NODE_ENV === 'development' && !process.env.REPLICATE_API_TOKEN && (
-          <Alert className="mb-6 border-blue-200 bg-blue-50">
-            <Info className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
-              <strong>提示：</strong>请在 .env.local 文件中配置 REPLICATE_API_TOKEN 以启用真实的 3D 生成功能。
-              查看 <code className="bg-blue-100 px-1 rounded">docs/API_SETUP.md</code> 了解详情。
-            </AlertDescription>
-          </Alert>
-        )}
 
         {/* Error Alert */}
         {error && (

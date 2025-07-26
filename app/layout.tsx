@@ -23,8 +23,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
-      <body className={`${inter.className} ${pacifico.variable}`}>{children}</body>
+    <html lang="zh-CN" suppressHydrationWarning>
+      <body className={`${inter.className} ${pacifico.variable}`} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   )
 }
