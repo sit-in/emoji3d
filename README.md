@@ -2,6 +2,8 @@
 
 一个基于 AI 的 3D 表情包生成器，可以将照片转换为独特的 3D 岛屿风格表情贴纸。
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsit-in%2Femoji3d&env=REPLICATE_API_TOKEN&envDescription=API%20token%20for%20Replicate&envLink=https%3A%2F%2Freplicate.com%2Faccount%2Fapi-tokens)
+
 ## 🌟 功能特点
 
 - **AI 驱动**：使用 Replicate API 生成高质量 3D 表情
