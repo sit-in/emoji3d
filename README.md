@@ -160,4 +160,4 @@ MIT License
 
 - [Replicate](https://replicate.com/) - AI 模型托管
 - [shadcn/ui](https://ui.shadcn.com/) - UI 组件设计
-- [Next.js](https://nextjs.org/) - React 框架
+- [Next.js](https://nextjs.org/) - React 框架# Trigger deploy
