@@ -21,9 +21,6 @@ interface GeneratedResult {
 export default function Uploader() {
   const [isUploading, setIsUploading] = useState(false)
   const [result, setResult] = useState<GeneratedResult | null>(null)
-  const [showLeadForm, setShowLeadForm] = useState(false)
-  const [email, setEmail] = useState("")
-  const [wechat, setWechat] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [selectedStyle, setSelectedStyle] = useState("Clay")
   const [customPrompt, setCustomPrompt] = useState("")
@@ -122,47 +119,14 @@ export default function Uploader() {
   })
 
   const handleSaveToAlbum = () => {
-    setShowLeadForm(true)
-  }
-
-  const handleLeadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!email && !wechat) {
-      alert("请至少填写邮箱或微信号")
-      return
-    }
-
-    try {
-      // Submit lead information
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email || null,
-          wechat: wechat || null,
-          timestamp: new Date().toISOString(),
-        }),
-      })
-
-      if (response.ok) {
-        alert("信息已保存！我们会及时通知你产品更新")
-        setShowLeadForm(false)
-
-        if (result?.url) {
-          const link = document.createElement("a")
-          link.href = result.url
-          link.download = "3d-emoji-sticker.png"
-          link.click()
-        }
-      }
-    } catch (error) {
-      console.error("Lead submission error:", error)
-      alert("提交失败，请重试")
+    if (result?.url) {
+      const link = document.createElement("a")
+      link.href = result.url
+      link.download = "3d-emoji-sticker.png"
+      link.click()
     }
   }
+
 
   const handleRetry = () => {
     setError(null)
@@ -363,57 +327,6 @@ export default function Uploader() {
           </div>
         )}
 
-        {/* Lead Generation Modal */}
-        {showLeadForm && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <Card className="w-full max-w-md">
-              <CardContent className="p-6">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">获取你的 3D Emoji</h3>
-                  <p className="text-gray-600">留下联系方式，我们会第一时间通知你产品更新</p>
-                </div>
-
-                <form onSubmit={handleLeadSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">邮箱地址</label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">微信号</label>
-                    <Input
-                      type="text"
-                      placeholder="你的微信号"
-                      value={wechat}
-                      onChange={(e) => setWechat(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <p className="text-xs text-gray-500">* 至少填写一项联系方式</p>
-
-                  <div className="flex gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={() => setShowLeadForm(false)} className="flex-1">
-                      取消
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="flex-1 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
-                    >
-                      获取贴纸
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </div>
     </section>
   )
