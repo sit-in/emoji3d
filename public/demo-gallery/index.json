@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2025-07-29T07:22:04.992Z",
+  "count": 7,
+  "demos": [
+    {
+      "name": "demo-1",
+      "originalFile": "pexels-minan1398-1115697.jpg",
+      "generatedAt": "2025-07-29T07:17:52.668Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-2",
+      "originalFile": "pexels-pixabay-235462.jpg",
+      "generatedAt": "2025-07-29T07:18:30.707Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-3",
+      "originalFile": "pexels-shkrabaanthony-5214995.jpg",
+      "generatedAt": "2025-07-29T07:19:03.749Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-4",
+      "originalFile": "pexels-soldiervip-1386608.jpg",
+      "generatedAt": "2025-07-29T07:19:39.589Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-5",
+      "originalFile": "pexels-soldiervip-1406766.jpg",
+      "generatedAt": "2025-07-29T07:20:16.243Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-6",
+      "originalFile": "pexels-soldiervip-1408980.jpg",
+      "generatedAt": "2025-07-29T07:21:36.955Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    },
+    {
+      "name": "demo-7",
+      "originalFile": "pexels-soldiervip-1468376.jpg",
+      "generatedAt": "2025-07-29T07:22:04.992Z",
+      "files": {
+        "original": "original.jpg",
+        "model3d": "3d-model.png",
+        "transparent": "transparent-3d.png",
+        "composite": "composite.png"
+      }
+    }
+  ]
+}

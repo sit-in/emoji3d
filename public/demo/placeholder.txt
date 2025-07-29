@@ -1,0 +1,7 @@
+This directory should contain:
+1. original.jpg - The photo of the woman in white top and red skirt
+2. 3d-model.png - AI generated 3D model (will be generated via API)
+3. transparent-3d.png - 3D model with background removed (will be generated via API)
+4. composite.png - Original photo with transparent 3D overlay (will be generated via API)
+
+Please save your photo as original.jpg in this directory.

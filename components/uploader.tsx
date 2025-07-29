@@ -30,6 +30,12 @@ export default function Uploader() {
   const [selectedStyle, setSelectedStyle] = useState("Clay")
   const [customPrompt, setCustomPrompt] = useState("")
   const [compositePosition, setCompositePosition] = useState<'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'>('bottom-right')
+  const [imagesLoaded, setImagesLoaded] = useState({
+    composite: false,
+    original: false,
+    '3d': false,
+    'bg-removed': false
+  })
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -44,10 +50,11 @@ export default function Uploader() {
       return
     }
 
-    if (file.size > 4 * 1024 * 1024) {
-      setError("图片大小不能超过 4MB")
-      return
-    }
+    // 移除文件大小限制
+    // if (file.size > 4 * 1024 * 1024) {
+    //   setError("图片大小不能超过 4MB")
+    //   return
+    // }
 
     setIsUploading(true)
 
@@ -89,6 +96,14 @@ export default function Uploader() {
         compositeError: data.composite_error || false,
         bg_removed_url: data.bg_removed_url || null,
         bg_removed: data.bg_removed || false,
+      })
+      
+      // 重置图片加载状态
+      setImagesLoaded({
+        composite: false,
+        original: false,
+        '3d': false,
+        'bg-removed': false
       })
 
       // Track upload event
@@ -281,7 +296,7 @@ export default function Uploader() {
                       <h3 className="text-2xl font-semibold text-gray-800">
                         {isDragActive ? "放开文件开始上传" : "拖拽图片到这里，或点击选择"}
                       </h3>
-                      <p className="text-gray-600">支持 JPG、PNG 格式，文件大小不超过 4MB</p>
+                      <p className="text-gray-600">支持 JPG、PNG 格式</p>
                     </div>
 
                     <Button
@@ -302,31 +317,69 @@ export default function Uploader() {
             {/* Result Display */}
             <Card className="overflow-hidden shadow-2xl">
               <CardContent className="p-0">
-                {/* 主图展示区 */}
-                <div className="relative">
+                {/* 主图展示区 - 预加载所有图片 */}
+                <div className="relative overflow-hidden min-h-[400px] max-h-[600px] bg-gray-50 flex items-center justify-center">
+                  {/* 合成效果 */}
                   <img
-                    src={
-                      viewMode === 'composite' ? result.compositeUrl :
-                      viewMode === 'original' ? result.originalUrl :
-                      viewMode === '3d' ? result.model3dUrl :
-                      result.bg_removed_url || result.originalUrl
-                    }
-                    alt={
-                      viewMode === 'composite' ? "合成效果" :
-                      viewMode === 'original' ? "原图" :
-                      viewMode === '3d' ? "3D 模型" :
-                      "去背景图"
-                    }
-                    className={`w-full max-h-[600px] object-contain ${
-                      (viewMode === '3d' || viewMode === 'bg-removed') ? 'bg-checkered' : ''
+                    src={result.compositeUrl}
+                    alt="合成效果"
+                    className={`w-full max-h-[600px] object-contain transition-opacity duration-300 ${
+                      viewMode === 'composite' ? 'opacity-100' : 'opacity-0 absolute inset-0'
                     }`}
+                    loading="eager"
+                    onLoad={() => setImagesLoaded(prev => ({ ...prev, composite: true }))}
                     onError={(e) => {
-                      console.error("Failed to load image")
-                      if (!result.demoMode) {
+                      setImagesLoaded(prev => ({ ...prev, composite: true }))
+                      if (!result.demoMode && viewMode === 'composite') {
                         setError("图片加载失败，请重试")
                       }
                     }}
                   />
+                  
+                  {/* 原始照片 */}
+                  <img
+                    src={result.originalUrl}
+                    alt="原始照片"
+                    className={`w-full max-h-[600px] object-contain transition-opacity duration-300 ${
+                      viewMode === 'original' ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                    loading="eager"
+                    onLoad={() => setImagesLoaded(prev => ({ ...prev, original: true }))}
+                    onError={() => setImagesLoaded(prev => ({ ...prev, original: true }))}
+                  />
+                  
+                  {/* 3D 模型 */}
+                  <img
+                    src={result.model3dUrl}
+                    alt="3D 模型"
+                    className={`w-full max-h-[600px] object-contain bg-checkered transition-opacity duration-300 ${
+                      viewMode === '3d' ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                    }`}
+                    loading="eager"
+                    onLoad={() => setImagesLoaded(prev => ({ ...prev, '3d': true }))}
+                    onError={() => setImagesLoaded(prev => ({ ...prev, '3d': true }))}
+                  />
+                  
+                  {/* 透明3D */}
+                  {result.bg_removed_url && (
+                    <img
+                      src={result.bg_removed_url}
+                      alt="透明3D模型"
+                      className={`w-full max-h-[600px] object-contain bg-checkered transition-opacity duration-300 ${
+                        viewMode === 'bg-removed' ? 'opacity-100' : 'opacity-0 absolute inset-0'
+                      }`}
+                      loading="eager"
+                      onLoad={() => setImagesLoaded(prev => ({ ...prev, 'bg-removed': true }))}
+                      onError={() => setImagesLoaded(prev => ({ ...prev, 'bg-removed': true }))}
+                    />
+                  )}
+                  
+                  {/* 加载指示器 */}
+                  {!imagesLoaded[viewMode] && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                      <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+                    </div>
+                  )}
                   
                   {/* 图片类型标签 */}
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm">

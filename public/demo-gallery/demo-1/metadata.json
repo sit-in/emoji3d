@@ -1,0 +1,11 @@
+{
+  "name": "demo-1",
+  "originalFile": "pexels-minan1398-1115697.jpg",
+  "generatedAt": "2025-07-29T07:17:52.668Z",
+  "files": {
+    "original": "original.jpg",
+    "model3d": "3d-model.png",
+    "transparent": "transparent-3d.png",
+    "composite": "composite.png"
+  }
+}

@@ -4,14 +4,18 @@ import Gallery from "@/components/gallery"
 import Uploader from "@/components/uploader"
 import FAQ from "@/components/faq"
 import Footer from "@/components/footer"
+import FeatureDemo from "@/components/feature-demo"
 
 export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
       <Steps />
+      <FeatureDemo />
       <Gallery />
-      <Uploader />
+      <div id="uploader">
+        <Uploader />
+      </div>
       <FAQ />
       <Footer />
     </main>

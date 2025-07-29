@@ -96,5 +96,16 @@
       linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    will-change: auto;
+    image-rendering: crisp-edges;
+  }
+  
+  /* 优化图片切换动画 */
+  .transition-opacity {
+    will-change: opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 }

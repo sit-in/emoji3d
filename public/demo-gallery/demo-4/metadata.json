@@ -1,0 +1,11 @@
+{
+  "name": "demo-4",
+  "originalFile": "pexels-soldiervip-1386608.jpg",
+  "generatedAt": "2025-07-29T07:19:39.589Z",
+  "files": {
+    "original": "original.jpg",
+    "model3d": "3d-model.png",
+    "transparent": "transparent-3d.png",
+    "composite": "composite.png"
+  }
+}
