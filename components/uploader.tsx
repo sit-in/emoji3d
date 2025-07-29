@@ -13,17 +13,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 
 interface GeneratedResult {
-  url: string
-  originalImage: string
+  originalUrl: string
+  model3dUrl: string
+  compositeUrl: string
   demoMode?: boolean
+  compositeError?: boolean
+  bg_removed_url?: string | null
+  bg_removed?: boolean
 }
 
 export default function Uploader() {
   const [isUploading, setIsUploading] = useState(false)
   const [result, setResult] = useState<GeneratedResult | null>(null)
+  const [viewMode, setViewMode] = useState<'composite' | 'original' | '3d' | 'bg-removed'>('composite')
   const [error, setError] = useState<string | null>(null)
   const [selectedStyle, setSelectedStyle] = useState("Clay")
   const [customPrompt, setCustomPrompt] = useState("")
+  const [compositePosition, setCompositePosition] = useState<'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'>('bottom-right')
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -46,8 +52,8 @@ export default function Uploader() {
     setIsUploading(true)
 
     try {
-      // Create preview URL for original image
-      const originalImageUrl = URL.createObjectURL(file)
+      // Create preview URL for original image (no longer needed as API returns base64)
+      // const originalImageUrl = URL.createObjectURL(file)
 
       // Call the API with timeout
       const formData = new FormData()
@@ -56,6 +62,7 @@ export default function Uploader() {
       if (customPrompt.trim()) {
         formData.append("prompt", customPrompt.trim())
       }
+      formData.append("position", compositePosition)
 
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 120000) // 2 minute timeout
@@ -75,9 +82,13 @@ export default function Uploader() {
       }
 
       setResult({
-        url: data.output_url,
-        originalImage: originalImageUrl,
+        originalUrl: data.original_url,
+        model3dUrl: data.model_3d_url,
+        compositeUrl: data.composite_url,
         demoMode: data.demo_mode || false,
+        compositeError: data.composite_error || false,
+        bg_removed_url: data.bg_removed_url || null,
+        bg_removed: data.bg_removed || false,
       })
 
       // Track upload event
@@ -106,7 +117,7 @@ export default function Uploader() {
     } finally {
       setIsUploading(false)
     }
-  }, [])
+  }, [selectedStyle, customPrompt, compositePosition])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -119,10 +130,22 @@ export default function Uploader() {
   })
 
   const handleSaveToAlbum = () => {
-    if (result?.url) {
+    if (result) {
       const link = document.createElement("a")
-      link.href = result.url
-      link.download = "3d-emoji-sticker.png"
+      // 根据当前查看模式保存相应的图片
+      let url = result.compositeUrl
+      let filename = "3d-emoji-composite.png"
+      
+      if (viewMode === 'original') {
+        url = result.originalUrl
+        filename = "original-image.png"
+      } else if (viewMode === '3d') {
+        url = result.model3dUrl
+        filename = "3d-emoji-model.png"
+      }
+      
+      link.href = url
+      link.download = filename
       link.click()
     }
   }
@@ -190,6 +213,22 @@ export default function Uploader() {
                     className="mt-2"
                   />
                   <p className="text-xs text-gray-500 mt-1">留空将使用默认的热带岛屿风格</p>
+                </div>
+                
+                <div>
+                  <Label htmlFor="position-select">3D 头像位置</Label>
+                  <Select value={compositePosition} onValueChange={(value: any) => setCompositePosition(value)}>
+                    <SelectTrigger id="position-select" className="w-full mt-2">
+                      <SelectValue placeholder="选择位置" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bottom-right">右下角（推荐）</SelectItem>
+                      <SelectItem value="bottom-left">左下角</SelectItem>
+                      <SelectItem value="top-right">右上角</SelectItem>
+                      <SelectItem value="top-left">左上角</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-gray-500 mt-1">选择3D头像在合成图中的位置</p>
                 </div>
               </div>
             </CardContent>
@@ -263,34 +302,87 @@ export default function Uploader() {
             {/* Result Display */}
             <Card className="overflow-hidden shadow-2xl">
               <CardContent className="p-0">
-                <div className="grid md:grid-cols-2">
-                  <div className="relative">
-                    <img
-                      src={result.originalImage || "/placeholder.svg"}
-                      alt="原图"
-                      className="w-full h-80 object-cover"
-                    />
-                    <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
-                      原图
-                    </div>
+                {/* 主图展示区 */}
+                <div className="relative">
+                  <img
+                    src={
+                      viewMode === 'composite' ? result.compositeUrl :
+                      viewMode === 'original' ? result.originalUrl :
+                      viewMode === '3d' ? result.model3dUrl :
+                      result.bg_removed_url || result.originalUrl
+                    }
+                    alt={
+                      viewMode === 'composite' ? "合成效果" :
+                      viewMode === 'original' ? "原图" :
+                      viewMode === '3d' ? "3D 模型" :
+                      "去背景图"
+                    }
+                    className={`w-full max-h-[600px] object-contain ${
+                      (viewMode === '3d' || viewMode === 'bg-removed') ? 'bg-checkered' : ''
+                    }`}
+                    onError={(e) => {
+                      console.error("Failed to load image")
+                      if (!result.demoMode) {
+                        setError("图片加载失败，请重试")
+                      }
+                    }}
+                  />
+                  
+                  {/* 图片类型标签 */}
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm">
+                    {viewMode === 'composite' ? "合成效果" :
+                     viewMode === 'original' ? "原始照片" :
+                     viewMode === '3d' ? "3D 模型" :
+                     "透明3D模型"}
                   </div>
 
-                  <div className="relative">
-                    <img
-                      src={result.url || "/placeholder.svg"}
-                      alt="3D Emoji 效果"
-                      className="w-full h-80 object-cover"
-                      onError={(e) => {
-                        console.error("Failed to load generated image")
-                        if (!result.demoMode) {
-                          setError("生成的图片加载失败，请重试")
-                        }
-                      }}
-                    />
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm">
-                      3D 效果
-                    </div>
-                  </div>
+                  {/* 合成错误提示 */}
+                  {result.compositeError && viewMode === 'composite' && (
+                    <Alert className="absolute bottom-4 left-4 right-4 bg-yellow-50 border-yellow-200">
+                      <AlertCircle className="h-4 w-4 text-yellow-600" />
+                      <AlertDescription className="text-yellow-800">
+                        图像合成遇到问题，显示3D模型原图
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+
+                {/* 视图切换按钮 */}
+                <div className="bg-gray-100 p-4 flex justify-center gap-2">
+                  <Button
+                    variant={viewMode === 'composite' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('composite')}
+                    className="px-4"
+                  >
+                    合成效果
+                  </Button>
+                  <Button
+                    variant={viewMode === 'original' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('original')}
+                    className="px-4"
+                  >
+                    原始照片
+                  </Button>
+                  <Button
+                    variant={viewMode === '3d' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('3d')}
+                    className="px-4"
+                  >
+                    3D 模型
+                  </Button>
+                  {result.bg_removed_url && (
+                    <Button
+                      variant={viewMode === 'bg-removed' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('bg-removed')}
+                      className="px-4"
+                    >
+                      透明3D
+                    </Button>
+                  )}
                 </div>
 
                 <div className="p-8 text-center bg-gradient-to-r from-orange-50 to-pink-50">
@@ -308,11 +400,14 @@ export default function Uploader() {
                       className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8"
                     >
                       <Download className="w-5 h-5 mr-2" />
-                      保存到相册
+                      保存{viewMode === 'composite' ? '合成图' : viewMode === 'original' ? '原图' : '3D模型'}
                     </Button>
 
                     <Button
-                      onClick={() => setResult(null)}
+                      onClick={() => {
+                        setResult(null)
+                        setViewMode('composite')
+                      }}
                       variant="outline"
                       size="lg"
                       className="border-orange-300 text-orange-600 hover:bg-orange-50 px-8"

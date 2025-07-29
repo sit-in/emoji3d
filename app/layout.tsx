@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Pacifico } from "next/font/google"
+import { ErrorBoundary } from "@/components/error-boundary"
+// import { DevRefresh } from "@/components/dev-refresh" // 移除自动刷新组件
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -25,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body className={`${inter.className} ${pacifico.variable}`} suppressHydrationWarning>
-        {children}
+        <ErrorBoundary>
+          {/* <DevRefresh /> 移除自动刷新组件 */}
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   )

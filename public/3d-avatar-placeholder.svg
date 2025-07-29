@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 透明背景 -->
+  <rect width="512" height="512" fill="transparent"/>
+  
+  <!-- 3D卡通头像示例 -->
+  <!-- 头部 -->
+  <ellipse cx="256" cy="200" rx="120" ry="140" fill="#FFD4A3" stroke="#E6A97A" stroke-width="4"/>
+  
+  <!-- 头发 -->
+  <path d="M136 160 C136 100, 376 100, 376 160 Q376 180, 350 180 L162 180 Q136 180, 136 160Z" fill="#8B4513" stroke="#654321" stroke-width="3"/>
+  
+  <!-- 眼睛 -->
+  <circle cx="210" cy="200" r="15" fill="#333333"/>
+  <circle cx="302" cy="200" r="15" fill="#333333"/>
+  <circle cx="215" cy="195" r="5" fill="#FFFFFF"/>
+  <circle cx="307" cy="195" r="5" fill="#FFFFFF"/>
+  
+  <!-- 眉毛 -->
+  <path d="M190 170 Q210 165, 230 170" stroke="#654321" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M282 170 Q302 165, 322 170" stroke="#654321" stroke-width="4" stroke-linecap="round" fill="none"/>
+  
+  <!-- 鼻子 -->
+  <path d="M256 210 Q246 230, 256 235 Q266 230, 256 210Z" fill="#E6A97A"/>
+  
+  <!-- 嘴巴 -->
+  <path d="M220 250 Q256 270, 292 250" stroke="#D2691E" stroke-width="4" stroke-linecap="round" fill="none"/>
+  
+  <!-- 身体（部分） -->
+  <ellipse cx="256" cy="380" rx="150" ry="100" fill="#87CEEB" stroke="#4682B4" stroke-width="4"/>
+  
+  <!-- 3D效果阴影 -->
+  <ellipse cx="256" cy="340" rx="100" ry="20" fill="rgba(0,0,0,0.2)"/>
+  
+  <!-- 高光 -->
+  <ellipse cx="220" cy="150" rx="40" ry="20" fill="rgba(255,255,255,0.3)"/>
+</svg>
