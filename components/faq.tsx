@@ -28,7 +28,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section id="faq" className="py-20 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">常见问题</h2>

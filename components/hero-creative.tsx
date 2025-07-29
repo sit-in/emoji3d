@@ -122,9 +122,9 @@ export default function HeroCreative() {
                 variant="outline"
                 size="lg"
                 className="border-2 border-gray-200 hover:border-purple-400 bg-white px-10 py-6 rounded-2xl text-lg font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
-                onClick={() => document.getElementById("steps")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
               >
-                了解详细流程
+                了解产品特色
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>

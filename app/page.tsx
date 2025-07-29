@@ -1,5 +1,5 @@
 import Hero from "@/components/hero-creative"
-import Steps from "@/components/steps"
+import Features from "@/components/features"
 import Gallery from "@/components/gallery"
 import Uploader from "@/components/uploader"
 import FAQ from "@/components/faq"
@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
-      <Steps />
       <FeatureDemo />
+      <Features />
       <Gallery />
       <div id="uploader">
         <Uploader />

@@ -47,7 +47,7 @@ export default function Gallery() {
   const [selectedItem, setSelectedItem] = useState<(typeof galleryItems)[0] | null>(null)
 
   return (
-    <section className="py-20 bg-white">
+    <section id="gallery" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">效果展示</h2>
