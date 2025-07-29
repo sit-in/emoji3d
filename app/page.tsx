@@ -1,4 +1,4 @@
-import Hero from "@/components/hero"
+import Hero from "@/components/hero-creative"
 import Steps from "@/components/steps"
 import Gallery from "@/components/gallery"
 import Uploader from "@/components/uploader"
