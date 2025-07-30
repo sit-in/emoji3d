@@ -9,37 +9,37 @@ const galleryItems = [
   {
     id: 1,
     image: "/demo-gallery/demo-1/composite.png",
-    title: "清新女孩风格",
+    title: "森系精灵少女",
   },
   {
     id: 2,
     image: "/demo-gallery/demo-2/composite.png",
-    title: "阳光男孩风格",
+    title: "阳光海岛女孩",
   },
   {
     id: 3,
     image: "/demo-gallery/demo-3/composite.png",
-    title: "时尚女性风格",
+    title: "白衣天使医师",
   },
   {
     id: 4,
     image: "/demo-gallery/demo-4/composite.png",
-    title: "专业形象风格",
+    title: "荷塘月色佳人",
   },
   {
     id: 5,
     image: "/demo-gallery/demo-5/composite.png",
-    title: "优雅女士风格",
+    title: "花海草帽少女",
   },
   {
     id: 6,
     image: "/demo-gallery/demo-6/composite.png",
-    title: "自信女性风格",
+    title: "向日葵田园女孩",
   },
   {
     id: 7,
     image: "/demo-gallery/demo-7/composite.png",
-    title: "魅力女郎风格",
+    title: "粉色旗袍淑女",
   },
 ]
 

@@ -44,7 +44,7 @@ export default function Footer() {
               </a>
             </div>
             <div className="space-y-2 text-sm text-gray-400">
-              <p>微信：emoji3d_official</p>
+              <p>微信：257735</p>
               <p>小红书：@3D表情包生成器</p>
             </div>
           </div>
